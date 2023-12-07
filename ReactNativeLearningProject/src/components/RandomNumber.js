@@ -1,22 +1,34 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
-const RandomNumber = ({ key, style, number, selectedNumberIndexArray }) => {
+const RandomNumber = ({ index, style, number, selectedNumberIndexArray, revertGame }) => {
   const [selectedNumberIndexArr, setSelectedNumberIndexArr] =
     selectedNumberIndexArray;
 
   const [isSelected, setIsSelected] = useState(false);
+  const [revert, setRevert] = revertGame;
+
+  useEffect(() => {
+    if (revert === true) {
+      setIsSelected(false);
+      setRevert(false);
+    }
+  }, [revert])
 
   const handlePress = () => {
     console.log("Press");
-    setIsSelected(!isSelected);
+    let numberSelected = !isSelected;
+    setIsSelected(numberSelected);
+    console.log(numberSelected);
 
     let newArr = [...selectedNumberIndexArr];
-    if (selectedNumberIndexArr.includes(key)) {
-      newArr = newArr.filter((value) => value !== key);
+    if (!numberSelected) {
+      console.log("Remove index")
+      newArr = newArr.filter((value) => value !== index);
     } else {
-      newArr = [...selectedNumberIndexArr, key];
+      console.log("Add index")
+      newArr = [...selectedNumberIndexArr, index];
     }
     setSelectedNumberIndexArr(newArr);
   };
